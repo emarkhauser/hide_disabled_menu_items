@@ -1,0 +1,62 @@
+<?php
+/**
+ * @file
+ * This module hides disabled menu items in the menu interface within node edit
+ */
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hide_disabled_menu_items_form_node_form_alter(&$form, &$form_state, $form_id) {
+
+  // Generate a list of possible parents (not including this link or descendants).
+  // @todo This must be handled in a #process handler.
+  $link = $form['#node']->menu;
+  $type = $form['#node']->type;
+
+  // menu_parent_options() is goofy and can actually handle either a menu link
+  // or a node type both as second argument. Pick based on whether there is
+  // a link already (menu_node_prepare() sets mlid default to 0).
+  $options = menu_parent_options(menu_get_menus(), $link['mlid'] ? $link : $type, $type);
+
+  // Take out all disabled menu items
+  foreach ($options as $key=>$link_name) {
+    	if (strpos($link_name, '(disabled)') == FALSE) {
+		$options_enabled[$key] = $link_name;
+	}
+  }
+
+  $options = $options_enabled;
+
+  // If no possible parent menu items were found, there is nothing to display.
+  if (empty($options)) {
+    return;
+  }
+
+  $default = ($link['mlid'] ? $link['menu_name'] . ':' . $link['plid'] : variable_get('menu_parent_' . $type, 'main-menu:0'));
+  // If the current parent menu item is not present in options, use the first
+  // available option as default value.
+  // @todo User should not be allowed to access menu link settings in such a
+  // case.
+  if (!isset($options[$default])) {
+    $array = array_keys($options);
+    $default = reset($array);
+  }
+
+
+  $form['menu']['link']['parent'] = array(
+    '#type' => 'select',
+    '#title' => t('Parent item'),
+    '#default_value' => $default,
+    '#options' => $options,
+    '#attributes' => array('class' => array('menu-parent-select')),
+  );
+
+  dpm($form);
+  dpm($link);
+  dpm($type);
+  dpm($options);
+  dpm($options_enabled);
+
+}

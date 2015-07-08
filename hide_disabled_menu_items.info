@@ -1,0 +1,4 @@
+name = Hide Disabled Menu Items
+description = Hide disabled menu items in the menu interface within node edit
+core = 7.x
+dependencies[] = menu

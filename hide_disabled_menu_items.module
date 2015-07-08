@@ -53,10 +53,4 @@ function hide_disabled_menu_items_form_node_form_alter(&$form, &$form_state, $fo
     '#attributes' => array('class' => array('menu-parent-select')),
   );
 
-  dpm($form);
-  dpm($link);
-  dpm($type);
-  dpm($options);
-  dpm($options_enabled);
-
 }

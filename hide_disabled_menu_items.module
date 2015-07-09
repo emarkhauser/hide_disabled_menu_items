@@ -10,6 +10,7 @@
  */
 function hide_disabled_menu_items_form_node_form_alter(&$form, &$form_state, $form_id) {
 
+  // Get all current menu items
   $options = $form['menu']['link']['parent']['#options'];
 
   // Take out all disabled menu items
@@ -18,16 +19,9 @@ function hide_disabled_menu_items_form_node_form_alter(&$form, &$form_state, $fo
 		$options_enabled[$key] = $link_name;
 	}
   }
-
   $options = $options_enabled;
 
-  // If no possible parent menu items were found, there is nothing to display.
-  if (empty($options)) {
-    return;
-  }
-
-
+  // Put new list of menu items without the disabled items into the parent menu select box
   $form['menu']['link']['parent']['#options'] = $options;
-  
 
 }

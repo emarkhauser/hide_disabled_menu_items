@@ -19,3 +19,12 @@ function hide_disabled_parent_menu_items_install() {
     ->condition('name', 'hide_disabled_parent_menu_items', '=')
     ->execute();
 }
+
+/**
+ * Implementats hook_uninstall().
+ */
+function hide_disabled_parent_menu_items_uninstall() {
+  db_delete('system')
+          ->condition('name', 'hide_disabled_parent_menu_items', '=')
+          ->execute();
+}
